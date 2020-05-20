@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sharepoint="http://www.mulesoft.org/schema/mule/sharepoint" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sharepoint http://www.mulesoft.org/schema/mule/sharepoint/current/mule-sharepoint.xsd">
+	<flow name="implementationFlow" doc:id="a3883aab-c2c1-48f1-bda7-3ea35a288f6c" >
+		<http:listener doc:name="Temp Listener" doc:id="4db5864f-85ff-4af1-91b9-ebecbe5546e6" config-ref="HTTP_Listener_config" path="/test2" />
+		<sharepoint:file-get-content doc:name="Get Test File" doc:id="e93a4cfb-047f-420b-a574-b1b9b5296182" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="/sites/Inspections/MuleSoft/TestNameInsertDocument.docx"/>
+		<java:invoke-static doc:name="Fill Template" doc:id="257e310d-0de4-4956-8703-aa9b51963f6d" class="word_template_filler.Docx4jImplementation" method="fillTemplate(byte[])">
+			<java:args><![CDATA[#[arg0 : payload]]]></java:args>
+		</java:invoke-static>
+		<sharepoint:file-add doc:name="Upload Modified" doc:id="c32fcc6b-9685-456a-ab23-825aa334ace2" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="/sites/Inspections/MuleSoft/InsertNameModified.docx" overwrite="true">
+			<sharepoint:file-content-stream><![CDATA[#[payload]]]></sharepoint:file-content-stream>
+		</sharepoint:file-add>
+	</flow>
+</mule>

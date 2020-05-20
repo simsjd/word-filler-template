@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sharepoint="http://www.mulesoft.org/schema/mule/sharepoint" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/sharepoint http://www.mulesoft.org/schema/mule/sharepoint/current/mule-sharepoint.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="7cb0906a-5838-416a-a818-98bec1233d84" file="config.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2a96a130-124a-4673-8a78-2a34e644f492" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<sharepoint:sharepoint-online-config name="Sharepoint_Inspection_Site" doc:name="Sharepoint Sharepoint online" doc:id="67ce8921-11f4-4a86-b42a-f0a61731a953" >
+		<sharepoint:online-connection onlineUsername="${Sharepoint.username}" onlinePassword="${Sharepoint.password}" siteUrl="${Sharepoint.site}" />
+	</sharepoint:sharepoint-online-config>
+</mule>
