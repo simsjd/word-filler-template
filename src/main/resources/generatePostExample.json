@@ -1,0 +1,7 @@
+{
+	"template": "/sites/Inspections/MuleSoft/TestNameInsertVariable.docx",
+	"saveTo": "/sites/Inspections/MuleSoft/InsertNameModifiedVariable.docx",
+	"data": {
+		"name" : "Joey Rigatoni"
+	}
+}

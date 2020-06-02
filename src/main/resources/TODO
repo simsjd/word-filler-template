@@ -1,0 +1,13 @@
+Overall:
+	USE APIkit router to create an interface
+
+generateDocumentFlow:
+	validate the post body to confirm it has the right format
+	Error handling
+		Wrong format submitted
+		Cannot find template submitted
+		Error generating the file
+		Error uploading the file
+
+uploadDocumentFlow:
+	Everything

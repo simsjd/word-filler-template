@@ -1,4 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
-  <types:catalog/>
+  <types:catalog>
+    <types:type name="generatePostExample" format="json">
+      <types:shape format="weave" example="generatePostExample.json"><![CDATA[%dw 2.0
+
+type generatePostExample = {|
+  template: String, 
+  saveTo: String, 
+  data: {}
+|} {"example": "{\\\"template\\\":\\\"\\/sites\\/Inspections\\/MuleSoft\\/TestNameInsertVariable.docx\\\",\\\"saveTo\\\":\\\"\\/sites\\/Inspections\\/MuleSoft\\/InsertNameModifiedVariable.docx\\\",\\\"data\\\":{}}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#4ea778fa-6dd3-4766-86a3-3202535e1d62">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="generatePostExample"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
