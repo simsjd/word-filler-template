@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="sharepoint_document_controls-main" doc:id="848d724a-10dd-4cd6-9c3e-cfac00c62663" >
+		<http:listener doc:name="Listener" doc:id="922d18b8-541f-445b-9675-ad1a9d6f640f" config-ref="HTTP_Listener_config" path="/api/*" >
+			<http:response statusCode="#[vars.httpStatus default 200]" >
+				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router doc:name="APIkit Router" doc:id="da9ad17f-2582-4bd8-9219-49fadeb242bf" config-ref="APIkit-config" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="702b59a0-ca4e-493a-96a9-c9126c819a3d" type="APIKIT:BAD_REQUEST" >
+				<ee:transform doc:name="Transform Message" doc:id="4524d787-1417-4da8-a4a6-69db61b6ccbb" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="279951d6-74db-4db0-b7d1-ca1d9040c2d8" type="APIKIT:NOT_FOUND" >
+				<ee:transform doc:name="Transform Message" doc:id="79ffeb18-8bbc-46ad-9056-f17a466aa256" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d24aacad-091f-49ec-bd81-d8485e6e5c69" type="APIKIT:METHOD_NOT_ALLOWED" >
+				<ee:transform doc:name="Transform Message" doc:id="c0383f4c-5a68-45b5-8851-923eaf29c8f6" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1f9d3374-92a9-4735-a436-e95dfc694f36" type="APIKIT:NOT_ACCEPTABLE" >
+				<ee:transform doc:name="Transform Message" doc:id="52ee7493-a756-4dbc-8459-890b67c98e5f" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="adee8aae-8dd1-44a1-a634-49cb9ef04b81" type="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+				<ee:transform doc:name="Transform Message" doc:id="2abda129-bf7d-43f9-9a3e-c229251f86c6" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[415]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7a2d4c52-2a23-4872-9ea4-6b86a46a2e31" type="APIKIT:NOT_IMPLEMENTED" >
+				<ee:transform doc:name="Transform Message" doc:id="85c9f166-e075-4d23-8d5d-b92a1b094be5" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="sharepoint_document_controls-console" doc:id="609575e8-9c0b-4d04-94cf-95c5e35d3d3c" >
+		<http:listener doc:name="Listener" doc:id="afdc70d3-0ad8-4d92-a410-0aabafe881c7" config-ref="HTTP_Listener_config" path="/console/*">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:console doc:name="APIkit Console" doc:id="d4408f22-9d8e-453c-981a-57f87c5f21f9" config-ref="APIkit-config"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d8dd67fa-dcb9-4abc-bcec-143354dee445" type="APIKIT:NOT_FOUND">
+				<ee:transform doc:name="Transform Message" doc:id="a47728cf-4e2c-4d0c-b441-05412a60cec7" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="post:\generate:application\json:APIkit-config" doc:id="a8185971-9c87-4bab-89e5-eef1a998e2d7" >
+		<flow-ref doc:name="generateDocument" doc:id="2cc8350f-3859-484a-8f88-fc0f1df7e007" name="generateDocumentFlow" />
+	</flow>
+	<flow name="post:\upload\single:application\json:APIkit-config" doc:id="c584603e-8039-438f-a216-ef5ac1282473" >
+		<flow-ref doc:name="uploadSingle" doc:id="bc4237d6-cfa1-4acd-ba78-9fdd0c38eb69" name="uploadDocumentFlow" />
+	</flow>
+	<flow name="post:\upload\multiple:application\json:APIkit-config" doc:id="bf14a222-e4f9-40fb-920b-e3a938c73c4b" >
+		<flow-ref doc:name="uploadMultiple" doc:id="3aecc06b-02ce-4880-94b8-a0b9030d3610" name="uploadMultipleDocumentsFlow" />
+	</flow>
+</mule>

@@ -1,0 +1,39 @@
+#%RAML 1.0
+title: Sharepoint Document Controls API
+version: 1.0
+  
+/generate:
+  post:
+    displayName: Generate document
+    body: 
+      application/json:
+    responses: 
+      201:
+        body: 
+          application/json:
+            example:
+              message: Document generated and uploaded
+                   
+/upload:
+  /single:
+    post:
+      displayName: Upload single document
+      body: 
+        application/json:
+      responses: 
+        201:
+          body: 
+            application/json:
+              example:
+                message: Document uploaded
+  /multiple:
+    post:
+      displayName: Upload multiple documents
+      body: 
+        application/json:
+      responses: 
+        201:
+          body: 
+            application/json:
+              example:
+                message: Documents uploaded

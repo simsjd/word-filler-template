@@ -9,7 +9,6 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/sharepoint http://www.mulesoft.org/schema/mule/sharepoint/current/mule-sharepoint.xsd">
 	<flow name="generateDocumentFlow" doc:id="a3883aab-c2c1-48f1-bda7-3ea35a288f6c" >
-		<http:listener doc:name="Temp Listener" doc:id="4db5864f-85ff-4af1-91b9-ebecbe5546e6" config-ref="HTTP_Listener_config" path="/test2" allowedMethods="POST"/>
 		<ee:transform doc:name="Transform Message" doc:id="4ea778fa-6dd3-4766-86a3-3202535e1d62" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -40,5 +39,30 @@ payload.data]]></ee:set-variable>
 		<sharepoint:file-add doc:name="Upload Generated File" doc:id="c32fcc6b-9685-456a-ab23-825aa334ace2" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="#[vars.saveTo]" overwrite="true">
 			<sharepoint:file-content-stream><![CDATA[#[payload]]]></sharepoint:file-content-stream>
 		</sharepoint:file-add>
+	</flow>
+	<flow name="uploadDocumentFlow" doc:id="cdb6738c-e199-48b9-9975-48f93615aa47" >
+		<ee:transform doc:name="Transform Message" doc:id="8dfeb069-7067-4c68-aaf3-5b3860b40c91" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/octet-stream
+import fromBase64 from dw::core::Binaries
+---
+fromBase64(payload.file)]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="saveTo" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.saveTo]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<sharepoint:file-add doc:name="Upload File" doc:id="d4a997d2-1708-478b-9398-be2d5fe147ec" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="#[vars.saveTo]">
+			<sharepoint:file-content-stream ><![CDATA[#[payload]]]></sharepoint:file-content-stream>
+		</sharepoint:file-add>
+	</flow>
+	<flow name="uploadMultipleDocumentsFlow" doc:id="d1ea9786-edeb-4e9a-9eb4-703bef2e2ba9" >
+		<foreach doc:name="For Each" doc:id="9c29b76f-7e1b-48d1-9e73-101a62271790" collection="#[payload]">
+			<flow-ref doc:name="uploadDocumentFlow" doc:id="89bc6b6c-0097-4516-accc-230c64b64333" name="uploadDocumentFlow" />
+		</foreach>
 	</flow>
 </mule>

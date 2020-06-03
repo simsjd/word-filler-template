@@ -12,12 +12,31 @@ type generatePostExample = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="uploadPostExample" format="json">
+      <types:shape format="weave" example="uploadPostExample.json"><![CDATA[%dw 2.0
+
+type uploadPostExample = {|
+  saveTo: String, 
+  file: String
+|} {"example": "{\\\"saveTo\\\":\\\"\\/sites\\/Inspections\\/MuleSoft\\/InsertNameModifiedVariable.docx\\\",\\\"file\\\":\\\"Base64OfTheBinaryFile\\\"}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#4ea778fa-6dd3-4766-86a3-3202535e1d62">
     <types:processor-declaration>
       <types:input-event>
         <types:message>
           <types:payload type="generatePostExample"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#8dfeb069-7067-4c68-aaf3-5b3860b40c91">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="uploadPostExample"/>
         </types:message>
       </types:input-event>
     </types:processor-declaration>

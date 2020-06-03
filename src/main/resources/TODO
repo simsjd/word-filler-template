@@ -1,5 +1,7 @@
 Overall:
-	USE APIkit router to create an interface
+	Generate better raml file, adding examples, type, etc
+	Revisit API kit router configuration
+	possible increase default memory size since working with documents
 
 generateDocumentFlow:
 	validate the post body to confirm it has the right format
@@ -10,4 +12,9 @@ generateDocumentFlow:
 		Error uploading the file
 
 uploadDocumentFlow:
-	Everything
+	validate the post body contents to confirm has the right format
+	revisit bulkification (need to support extremely large files)
+	Error handling
+		Wrong format submitted
+		Error uploading file
+		Only error single files and success the rest

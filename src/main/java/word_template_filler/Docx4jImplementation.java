@@ -3,7 +3,6 @@ package word_template_filler;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.docx4j.Docx4J;
