@@ -65,4 +65,24 @@ payload.saveTo]]></ee:set-variable>
 			<flow-ref doc:name="uploadDocumentFlow" doc:id="89bc6b6c-0097-4516-accc-230c64b64333" name="uploadDocumentFlow" />
 		</foreach>
 	</flow>
+	<flow name="queryFilesFlow" doc:id="ee4a783a-f3b9-4086-9e56-7fe3c818430e" >
+		<http:listener doc:name="Listener" doc:id="f6a7b326-25ec-4a82-ba83-600043de2471" config-ref="HTTP_Listener_config" path="/query"/>
+		<sharepoint:file-query doc:name="File query" doc:id="299030cf-bc68-480a-85a9-e8689228ba69" config-ref="Sharepoint_Inspection_Site" startingFolderPath="#[attributes.queryParams.folder]">
+			<sharepoint:query >?$select=Name,LinkingUrl,UniqueId</sharepoint:query>
+		</sharepoint:file-query>
+		<ee:transform doc:name="Transform Message" doc:id="e618d097-6426-4b72-818c-a0023e222fbb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (item, index) -> {
+	name: item.Name,
+	linkingUrl: item.LinkingUrl,
+	uniqueId: item.UniqueId,
+	downloadUrl: p("Sharepoint.site") ++ "_layouts/15/download.aspx?UniqueId=" ++ (item.UniqueId as String),
+	previewUrl: p("Sharepoint.site") ++ "_layouts/15/WopiFrame.aspx?sourcedoc=%7B" ++ (item.UniqueId as String) ++ "%7D&action=interactivepreview"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>

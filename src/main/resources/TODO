@@ -1,7 +1,11 @@
 Overall:
+	Authenticate per user from Mule to Sharepoint? (Long term, but since sf to mule is connected app can't for now)
+	Update to dynamically check for folder structure and create as needed
+		Folder structure will be /"Object"/"recordId"/
 	Generate better raml file, adding examples, type, etc
 	Revisit API kit router configuration
 	possible increase default memory size since working with documents
+	Require authentication from sf to mule
 
 generateDocumentFlow:
 	validate the post body to confirm it has the right format
@@ -18,3 +22,6 @@ uploadDocumentFlow:
 		Wrong format submitted
 		Error uploading file
 		Only error single files and success the rest
+
+queryFilesFlow:
+	Maybe the ability to pass the fields we would like to query, but not sure that's possible with standard connector

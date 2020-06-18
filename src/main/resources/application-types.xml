@@ -22,6 +22,10 @@ type uploadPostExample = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="fileQueryReturnResults" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#4ea778fa-6dd3-4766-86a3-3202535e1d62">
     <types:processor-declaration>
