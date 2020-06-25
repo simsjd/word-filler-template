@@ -25,3 +25,4 @@ uploadDocumentFlow:
 
 queryFilesFlow:
 	Maybe the ability to pass the fields we would like to query, but not sure that's possible with standard connector
+	Handle errors if there is nothing

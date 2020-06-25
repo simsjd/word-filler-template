@@ -33,7 +33,7 @@ payload.data]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<sharepoint:file-get-content doc:name="Get Template File" doc:id="e93a4cfb-047f-420b-a574-b1b9b5296182" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="#[vars.template]"/>
-		<java:invoke-static doc:name="Fill Template" doc:id="257e310d-0de4-4956-8703-aa9b51963f6d" class="word_template_filler.Docx4jImplementation" method="fillTemplate(byte[],java.util.Map)">
+		<java:invoke-static doc:name="Fill Template" doc:id="257e310d-0de4-4956-8703-aa9b51963f6d" class="word_manipulation.Docx4jImplementation" method="fillTemplate(byte[],java.util.Map)">
 			<java:args><![CDATA[#[{arg0 : payload, arg1 : vars.templateData}]]]></java:args>
 		</java:invoke-static>
 		<sharepoint:file-add doc:name="Upload Generated File" doc:id="c32fcc6b-9685-456a-ab23-825aa334ace2" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="#[vars.saveTo]" overwrite="true">
@@ -84,5 +84,12 @@ payload map (item, index) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	</flow>
+	<flow name="getPDFVersion" doc:id="64dd6272-558f-4bcc-b0be-bf2782cc424b" >
+		<http:listener doc:name="Listener" doc:id="d81d589b-6869-424b-ad06-3914e1eacc14" config-ref="HTTP_Listener_config" path="/getPDF" allowedMethods="GET"/>
+		<sharepoint:file-get-content doc:name="Get File" doc:id="d0d07e79-1876-4f8f-905f-6934839fa659" config-ref="Sharepoint_Inspection_Site" fileServerRelativeUrl="#[attributes.queryParams.file]"/>
+		<java:invoke-static doc:name="Convert to PDF" doc:id="b962d90d-bfd4-4039-a4e9-438208ef8dc4" class="word_manipulation.Docx4jImplementation" method="convertPDF(byte[])">
+			<java:args ><![CDATA[#[arg0: payload]]]></java:args>
+		</java:invoke-static>
 	</flow>
 </mule>
